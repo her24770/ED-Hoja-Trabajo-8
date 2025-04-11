@@ -1,3 +1,10 @@
+/**
+ * Sistema de Emergencias Hospitalarias
+ * Este programa simula un sistema de gestión de emergencias hospitalarias utilizando colas de prioridad.
+ * @author Josue Hernández, Estructura de Datos, Universidad del Valle de Guatemala
+ * @version 1.0
+ * @date 2025-04-10
+ */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
