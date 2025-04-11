@@ -2,17 +2,26 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        VectorHeap<Paciente> colaEmergencias = new VectorHeap<>();
-        Scanner sc = new Scanner(System.in);
-        String opcionMenu;
-
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Seleccione el tipo de cola de prioridad:");
+        System.out.println("1. VectorHeap (Implementación custom)");
+        System.out.println("2. Java Collection Framework (Estándar)");
+        System.out.print("Opción: ");
+        
+        String queueType = scanner.nextLine();
+        
+        InterfacePriorityQueue<Paciente> colaEmergencias;
+        colaEmergencias = PriorityQueueFactory.createPriorityQueue(queueType);
+        
         // Datos de prueba iniciales
         colaEmergencias.add(new Paciente("Juan Perez", "fractura de pierna", 'C'));
         colaEmergencias.add(new Paciente("Maria Ramirez", "apendicitis", 'A'));
         colaEmergencias.add(new Paciente("Lorenzo Toledo", "chikunguya", 'E'));
 
-        boolean loop = true;
-        while (loop) {
+        String opcion="";
+        boolean loop=true;
+        while(loop){
             System.out.println("\n=== SISTEMA DE EMERGENCIAS HOSPITALARIAS ===");
             System.out.println("1. Agregar nuevo paciente");
             System.out.println("2. Atender siguiente paciente");
@@ -20,36 +29,36 @@ public class Main {
             System.out.println("4. Salir");
             System.out.print("Seleccione una opción: ");
 
-            opcionMenu = sc.nextLine();
+            opcion = scanner.nextLine();
 
-            switch (opcionMenu) {
-                case "1": 
+            switch (opcion) {
+                case "1": {
                     System.out.println("\n--- AGREGAR NUEVO PACIENTE ---");
                     
                     System.out.print("Nombre del paciente: ");
-                    String nombre = sc.nextLine();
+                    String nombre = scanner.nextLine();
                     
                     System.out.print("Síntoma o diagnóstico: ");
-                    String sintoma = sc.nextLine();
+                    String sintoma = scanner.nextLine();
                     
                     char codigo;
                     System.out.print("Código de emergencia (A-E, donde A es máxima prioridad): ");
-                    codigo = sc.nextLine().toUpperCase().charAt(0);
+                    codigo = scanner.nextLine().toUpperCase().charAt(0);
                     if (codigo < 'A' || codigo > 'E') {
-                        System.out.println("El código debe ser una letra entre A y E");
+                        System.out.println("Error: El código debe ser una letra entre A y E");
                         break;
                     }
-                        Paciente nuevoPaciente = new Paciente(nombre, sintoma, codigo);
-                        colaEmergencias.add(nuevoPaciente);
-                        
-                        System.out.println("\nPaciente agregado correctamente:");
-                        System.out.println(nuevoPaciente);
-                    
-                    break;
-                
 
+                    Paciente nuevoPaciente = new Paciente(nombre, sintoma, codigo);
+                    colaEmergencias.add(nuevoPaciente);
+                    
+                    System.out.println("\nPaciente agregado correctamente:");
+                    System.out.println(nuevoPaciente);
+                    break;
+                }
+                
                 case "2": {
-                    System.out.println("\n--- ATENDER SIGUIENTE PACIENTE ---");
+                    System.out.println("\n--- ATENDER PACIENTE ---");
                     
                     if (colaEmergencias.isEmpty()) {
                         System.out.println("No hay pacientes en espera.");
@@ -70,8 +79,8 @@ public class Main {
                         break;
                     }
                     
-                    // Para mostrar todos sin modificar la cola original
-                    PriorityQueue<Paciente> copia = new VectorHeap<>();
+                    InterfacePriorityQueue<Paciente> copia = PriorityQueueFactory.createPriorityQueue(queueType);
+                    
                     int posicion = 1;
                     
                     while (!colaEmergencias.isEmpty()) {
@@ -80,7 +89,6 @@ public class Main {
                         copia.add(p);
                     }
                     
-                    // Restaurar la cola original
                     while (!copia.isEmpty()) {
                         colaEmergencias.add(copia.remove());
                     }
@@ -90,8 +98,8 @@ public class Main {
                 }
                 
                 case "4":
-                    loop = false;
                     System.out.println("Saliendo del sistema...");
+                    loop = false;
                     break;
                     
                 default:
@@ -99,6 +107,6 @@ public class Main {
             }
         }
 
-        sc.close();
+        scanner.close();
     }
 }
