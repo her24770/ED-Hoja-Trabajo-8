@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -13,11 +15,7 @@ public class Main {
         
         InterfacePriorityQueue<Paciente> colaEmergencias;
         colaEmergencias = PriorityQueueFactory.createPriorityQueue(queueType);
-        
-        // Datos de prueba iniciales
-        colaEmergencias.add(new Paciente("Juan Perez", "fractura de pierna", 'C'));
-        colaEmergencias.add(new Paciente("Maria Ramirez", "apendicitis", 'A'));
-        colaEmergencias.add(new Paciente("Lorenzo Toledo", "chikunguya", 'E'));
+        cargarPacientes(colaEmergencias, "pacientes.txt");
 
         String opcion="";
         boolean loop=true;
@@ -108,5 +106,24 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    private static void cargarPacientes(InterfacePriorityQueue<Paciente>cola, String nombreArchivo) {
+        try {
+            Scanner lector = new Scanner(new File(nombreArchivo));
+            while (lector.hasNextLine()) {
+                String[] datos = lector.nextLine().split(",");
+                if (datos.length == 3) {
+                    String nombre = datos[0].trim();
+                    String sintoma = datos[1].trim();
+                    char codigo = datos[2].trim().toUpperCase().charAt(0);
+                    cola.add(new Paciente(nombre, sintoma, codigo));
+                }
+            }
+            lector.close();
+            System.out.println("Pacientes cargados exitosamente desde: " + nombreArchivo);
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Archivo no encontrado");
+        }
     }
 }
